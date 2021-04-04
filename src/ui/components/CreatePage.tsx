@@ -14,7 +14,7 @@ export const CreatePage: FC = () => {
 
     return (
         <form onSubmit={onSubmit}>
-            <input name="host" value="https://localhost/" />
+            <input name="host" defaultValue="https://localhost/" />
             <button type="submit">Create room</button>
         </form>
     )
