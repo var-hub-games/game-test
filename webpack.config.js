@@ -83,7 +83,6 @@ module.exports = (env) => {
             new HtmlWebpackPlugin({
                 template: "./src/index.html",
                 filename: "index.html",
-                base: "/",
                 chunks: ["index"]
             }),
             new HtmlWebpackTagsPlugin({
