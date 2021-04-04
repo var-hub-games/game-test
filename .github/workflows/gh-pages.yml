@@ -19,9 +19,6 @@ jobs:
       - name: Install (Yarn)
         run: yarn
 
-      - name: Build (Yarn)
-        run: yarn build
-
       - name: Deploy GH-Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
