@@ -14,11 +14,12 @@ export const App: FC = () => {
 
     useEffect(() => {
         if (!roomId) return;
-        if (!state) return;
+        if (typeof state != "string") return;
         const { host } = JSON.parse(state);
         const hub = new VarHub(host);
-        hub.joinRoom(roomId).then((room) => setRoom(room));
-    }, [roomId, state])
+        hub.joinRoom(roomId, state).then(setRoom);
+
+    }, [roomId, state]);
 
     if (!roomId) {
         return <CreatePage/>
