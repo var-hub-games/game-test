@@ -11,8 +11,7 @@ const RoomTimer: FC = () => {
         if (diffMs == null) return;
         const formData = new FormData(event.currentTarget);
         const timer = Number(formData.get("timer"));
-        const time = performance.now() - diffMs + timer;
-        console.log("TIME VALUE", time, performance.now(), diffMs, timer);
+        const time = room.createTimer(timer);
         if (room.state && typeof room.state === "object") {
             await room.changeState(time, ["timer"]);
         } else {
