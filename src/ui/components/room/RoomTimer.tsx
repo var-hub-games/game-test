@@ -1,9 +1,10 @@
 import React, {FC, FormEventHandler, memo, useCallback, useEffect, useState} from "react";
-import {useRoom, useRoomStateSelector} from "@varhub-games/tools-react";
+import {useRoom, useRoomData, useRoomEvent, useRoomStateSelector} from "@varhub-games/tools-react";
 import { useRoomInterval } from "@varhub-games/tools-react";
 
 const RoomTimer: FC = () => {
     const room = useRoom();
+    const roomData = useRoomData();
 
     const onsubmit: FormEventHandler<HTMLFormElement> = useCallback(async (event) => {
         event.preventDefault();
@@ -25,12 +26,21 @@ const RoomTimer: FC = () => {
         }
     }, [room]);
 
+    const syncTime = useCallback(async () => {
+        await room.syncTime();
+    }, [room]);
+
     const timerValue = useRoomStateSelector((state: any) => state?.timer);
     const hasTimer = typeof timerValue === "number";
 
+    useRoomEvent("syncTime", console.warn);
+
     return (
         <div>
-            <div>timerValue === {String(timerValue)} ({typeof timerValue})</div>
+            <div>
+                timerValue === {String(timerValue)}
+                <button onClick={syncTime}>Sync time: {roomData.roomStartDiffMs}</button>
+            </div>
             <form onSubmit={onsubmit}>
                 <input name="timer" type="number" defaultValue="10000" placeholder="timer, ms" />
                 <button type="submit">set timer</button>
