@@ -64,6 +64,9 @@ const TimerWatcher: FC<{timerValue: number}> = memo(({timerValue}) => {
     }, [timerValue]);
 
     useRoomInterval(timerValue, 1000, (left, diff, expired) => {
+        if (!expired) {
+            beep(left ? 50 : 500, 2000);
+        }
         setTimerInfo({left, diff, expired });
     }, {callOnExpired: true});
 
@@ -92,5 +95,21 @@ const TimerWatcher: FC<{timerValue: number}> = memo(({timerValue}) => {
             </div>
         </div>
     )
-})
+});
+
+const audioCtx = new AudioContext();
+function beep(duration: number, frequency?: number, volume?: number, type?: OscillatorType) {
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    if (volume){gainNode.gain.value = volume;}
+    if (frequency){oscillator.frequency.value = frequency;}
+    if (type){oscillator.type = type;}
+
+    oscillator.start(audioCtx.currentTime);
+    oscillator.stop(audioCtx.currentTime + ((duration || 500) / 1000));
+}
 
