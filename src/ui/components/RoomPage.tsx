@@ -5,6 +5,7 @@ import RoomMessages from "./room/RoomMessages";
 import RoomDoor from "./room/RoomDoor";
 import RoomConnections from "./room/RoomConnections";
 import RoomState from "./room/RoomState";
+import RoomTimer from "./room/RoomTimer";
 
 export const RoomPage: FC = () => {
 
@@ -45,6 +46,7 @@ export const RoomPage: FC = () => {
                 <button type="button" disabled={tab==="messages"} onClick={() => setTab("messages")}>MESSAGES</button>
                 <button type="button" disabled={tab==="connections"} onClick={() => setTab("connections")}>CONNECTIONS</button>
                 <button type="button" disabled={tab==="state"} onClick={() => setTab("state")}>STATE</button>
+                <button type="button" disabled={tab==="timer"} onClick={() => setTab("timer")}>TIMER</button>
             </div>
             <hr/>
             {tab === "info" && (<RoomInfo/>)}
@@ -52,6 +54,7 @@ export const RoomPage: FC = () => {
             {tab === "door" && (<RoomDoor/>)}
             {tab === "connections" && (<RoomConnections/>)}
             {tab === "state" && (<RoomState/>)}
+            {tab === "timer" && (<RoomTimer/>)}
         </div>
     )
 }
