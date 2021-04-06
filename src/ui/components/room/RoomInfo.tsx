@@ -13,6 +13,8 @@ const RoomInfo: FC = () => {
             <div>entered: {String(data.entered)}</div>
             <div>owned: {String(data.owned)}</div>
             <div>destroyed: {String(data.destroyed)}</div>
+            <div>roomStartDiffMs: {String(data.roomStartDiffMs)}</div>
+            <div>roomStartDiffAccuracyMs: {String(data.roomStartDiffAccuracyMs)}</div>
         </div>
     )
 }

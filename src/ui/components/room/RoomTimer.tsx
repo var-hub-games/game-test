@@ -38,8 +38,9 @@ const RoomTimer: FC = () => {
     return (
         <div>
             <div>
-                timerValue === {String(timerValue)}
-                <button onClick={syncTime}>Sync time: {roomData.roomStartDiffMs}</button>
+                <div>roomStartDiffMs = {roomData.roomStartDiffMs}</div>
+                <div>roomStartDiffAccuracyMs = {roomData.roomStartDiffAccuracyMs}</div>
+                <button onClick={syncTime}>Sync time</button>
             </div>
             <form onSubmit={onsubmit}>
                 <input name="timer" type="number" defaultValue="10000" placeholder="timer, ms" />
