@@ -1,6 +1,6 @@
 import React, {FC, FormEventHandler, memo, useCallback, useEffect, useState} from "react";
 import {useRoom, useRoomData, useRoomEvent, useRoomStateSelector} from "@varhub-games/tools-react";
-import { useRoomInterval } from "@varhub-games/tools-react";
+import { useRoomTimeCounter } from "@varhub-games/tools-react";
 
 const RoomTimer: FC = () => {
     const room = useRoom();
@@ -43,7 +43,7 @@ const RoomTimer: FC = () => {
                 <button onClick={syncTime}>Sync time</button>
             </div>
             <form onSubmit={onsubmit}>
-                <input name="timer" type="number" defaultValue="10000" placeholder="timer, ms" />
+                <input name="timer" type="number" defaultValue="1200" placeholder="timer diff" />
                 <button type="submit">set timer</button>
                 <button type="button" onClick={deleteTimer} disabled={!hasTimer}>delete timer</button>
                 <hr/>
@@ -57,29 +57,26 @@ const RoomTimer: FC = () => {
 }
 export default memo(RoomTimer);
 
+const STEP = 1000;
+const COUNT_MAX = 10;
 const TimerWatcher: FC<{timerValue: number}> = memo(({timerValue}) => {
     const room = useRoom();
-
-    const [timerInfo, setTimerInfo] = useState(() => ({
-        left: 0,
-        diff: 0,
-        expired: false,
-    }));
+    const [expired, setExpired] = useState(() => {
+        return room.getTimePassed(timerValue) >= STEP * COUNT_MAX;
+    })
 
     useEffect(() => {
-        const secLeft = Math.ceil(room.getTimeLeft(timerValue) / 1000);
-        setTimerInfo((value) => ({
-            ...value,
-            left: secLeft
-        }))
-    }, [timerValue]);
+        setExpired(room.getTimePassed(timerValue) >= STEP * COUNT_MAX);
+    }, [timerValue])
 
-    useRoomInterval(timerValue, 1000, (left, diff, expired) => {
-        if (!expired) {
-            beep(left ? 50 : 500, 2000);
-        }
-        setTimerInfo({left, diff, expired });
-    }, {callOnExpired: true});
+    const roomCounter = useRoomTimeCounter(timerValue, STEP, {min: 0, max: COUNT_MAX});
+    const countDown = COUNT_MAX - (roomCounter??0);
+
+    useEffect(() => {
+        if (expired) return;
+        console.log("COUNTER", countDown);
+        beep(countDown > 0 ? 50 : 500, 2000);
+    }, [countDown]);
 
     return (
         <div>
@@ -87,14 +84,9 @@ const TimerWatcher: FC<{timerValue: number}> = memo(({timerValue}) => {
             <div>
                 timerState: <input type="text" readOnly value={String(timerValue)} />
             </div>
+            <div>expired on set: {String(expired)}</div>
             <div>
-                seconds left: <input type="text" readOnly value={timerInfo.left} />
-            </div>
-            <div>
-                ms diff: <input type="text" readOnly value={timerInfo.diff} />
-            </div>
-            <div>
-                expired on start: <input type="text" readOnly value={String(timerInfo.expired)} />
+                seconds left: <input type="text" readOnly value={countDown} />
             </div>
             <div>
                 Rendered at:&nbsp;
