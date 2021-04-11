@@ -56,7 +56,7 @@ export const CreatePage = memo<CreatePageProps>(({setRoom}) => {
     return (
         <form onSubmit={onSubmit}>
             <div>
-                <input name="host" defaultValue={baseHost ?? "https://localhost/"} placeholder="Host url" />
+                <input name="host" defaultValue={baseHost ?? "https://varhub.myxomopx.ru/"} placeholder="Host url" />
             </div>
             <div>
                 <input name="roomId" defaultValue={baseRoomId ?? ""} placeholder="XXX-XXX / blank to new room" />
